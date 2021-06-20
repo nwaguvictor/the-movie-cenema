@@ -7,11 +7,13 @@ const MovieModel = require('../models/MovieModel');
  */
 class MovieService {
     static createMovie = async (movieData) => {
-        const movie = await MovieModel.create(movieData);
-        return {
-            success: true,
-            data: movie,
-        };
+        try {
+            const movie = await MovieModel.create(movieData);
+            return {
+                success: true,
+                data: movie,
+            };
+        } catch (error) {}
     };
     static getMovies = async () => {
         const movies = await MovieModel.find({});

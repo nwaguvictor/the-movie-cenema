@@ -9,10 +9,10 @@ const { MovieService } = require('../services');
  */
 class MovieController {
     static createMovies = catchAsync(async (req, res, next) => {
-        const { data, success } = await MovieService.createMovie(req.body);
+        const movie = await MovieService.createMovie(req.body);
         return res.status(201).json({
             status: 'success',
-            data,
+            data: { movie },
         });
     });
     static getMovies = catchAsync(async (req, res, next) => {

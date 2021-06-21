@@ -29,16 +29,25 @@ const MovieSchema = new Schema({
             values: ['Rumored', 'Planned', 'In Production', 'Released', 'Cancelled'],
             message: '{VALUE} is not supported',
         },
-        required: [true, 'Movie status is required'],
+        default: 'Released',
     },
     runtime: Number,
     language: String,
     original_title: String,
     release_date: {
-        type: [Date],
+        type: Date,
         default: Date.now,
     },
+    ratingQuantity: {
+        type: Number,
+        default: 0,
+    },
+    ratingAverage: {
+        type: Number,
+        default: 4.0,
+    },
     backdrop_path: String,
+    images: [String],
     slug: String,
 });
 

@@ -14,7 +14,7 @@ const options = {
 // Disable autoIndex on production
 if (process.env.NODE_ENV === 'production') options.autoIndex = false;
 
-module.exports = function () {
+module.exports = async function () {
     mongoose
         .connect(config.DB_URI, options)
         .then(() => console.log(':: Database Connected Successfully'))
@@ -22,4 +22,6 @@ module.exports = function () {
             console.error(`:: Error: ${error.message}`);
             process.exit();
         });
+
+    mongoose.connection.on('disconnected', () => console.log(':: Database disconnected from MongoDB'));
 };

@@ -5,7 +5,7 @@
  */
 const { Schema, model } = require('mongoose');
 
-const schema = new Schema({
+const MovieSchema = new Schema({
     adult: Boolean,
     title: {
         type: String,
@@ -25,7 +25,11 @@ const schema = new Schema({
     },
     status: {
         type: String,
-        enum: ['Rumored', 'Planned', 'In Production', 'Released', 'Cancelled'],
+        enum: {
+            values: ['Rumored', 'Planned', 'In Production', 'Released', 'Cancelled'],
+            message: '{VALUE} is not supported',
+        },
+        required: [true, 'Movie status is required'],
     },
     runtime: Number,
     language: String,
@@ -39,4 +43,4 @@ const schema = new Schema({
 });
 
 // Export Movie Model
-module.exports = model('Movie', schema);
+module.exports = model('Movie', MovieSchema);

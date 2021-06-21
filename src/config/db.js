@@ -8,7 +8,11 @@ const options = {
     useCreateIndex: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
+    autoIndex: true,
 };
+
+// Disable autoIndex on production
+if (process.env.NODE_ENV === 'production') options.autoIndex = false;
 
 module.exports = function () {
     mongoose

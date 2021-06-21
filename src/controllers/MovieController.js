@@ -10,30 +10,31 @@ const { MovieService } = require('../services');
 class MovieController {
     static createMovies = catchAsync(async (req, res, next) => {
         const { data, success } = await MovieService.createMovie(req.body);
-        if (!success) return next(new AppError('Error Creating Movie'));
-
         return res.status(201).json({
             status: 'success',
             data,
         });
     });
     static getMovies = catchAsync(async (req, res, next) => {
-        const { data, success } = await MovieService.getMovies();
-        if (!success) return next(new Error('Error Getting Movies'));
+        const movies = await MovieService.getMovies();
 
         return res.status(200).json({
             status: 'success',
-            data,
+            data: { movies },
         });
     });
     static getMovie = catchAsync(async (req, res, next) => {
+        const movie = await MovieService.getMovie({ id: req.params.id });
         return res.status(200).json({
             status: 'success',
+            data: movie,
         });
     });
     static getMovieById = catchAsync(async (req, res, next) => {
+        const movie = await MovieService.getMovieById(req.params.id);
         return res.status(200).json({
             status: 'success',
+            data: movie,
         });
     });
     static updateMovie = catchAsync(async (req, res, next) => {

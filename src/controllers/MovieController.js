@@ -16,10 +16,11 @@ class MovieController {
         });
     });
     static getMovies = catchAsync(async (req, res, next) => {
-        const movies = await MovieService.getMovies();
+        const movies = await MovieService.getMovies(req.query);
 
         return res.status(200).json({
             status: 'success',
+            total: movies.length,
             data: { movies },
         });
     });

@@ -37,7 +37,9 @@ module.exports = (error, req, res, next) => {
     if (!(err instanceof AppError)) {
         err.code = err.status || 500;
         err.status = err.status || 'error';
-        err.message = err.message || 'Server error, please try again later';
+        err.message = err.message || 'Internal Server error, please try again later';
+
+        console.error(`::Error Message: ${error}`);
     }
 
     return res.status(err.code).json({

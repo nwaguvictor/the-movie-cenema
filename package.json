@@ -8,7 +8,8 @@
         "email": "leofizzy3@gmail.com"
     },
     "scripts": {
-        "start": "nodemon src/index.js"
+        "start": "nodemon src/index.js",
+        "test": "jest --watchAll --verbose --detectOpenHandles"
     },
     "dependencies": {
         "dotenv": "^10.0.0",
@@ -16,6 +17,8 @@
         "mongoose": "^5.12.14"
     },
     "devDependencies": {
-        "morgan": "^1.10.0"
+        "jest": "^27.0.5",
+        "morgan": "^1.10.0",
+        "supertest": "^6.1.3"
     }
 }

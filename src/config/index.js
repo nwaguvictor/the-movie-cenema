@@ -11,6 +11,10 @@ const config = {
         DB_URI: process.env.MONGO_DB_URI || 'mongodb://localhost:27017/movie_cenema_db',
         PORT: process.env.PORT || 5000,
     },
+    test: {
+        DB_URI: process.env.MONGO_DB_URI || 'mongodb://localhost:27017/movie_cenema_test_db',
+        PORT: process.env.PORT || 2021,
+    },
 };
 
 const environment = process.env.NODE_ENV;

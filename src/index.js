@@ -25,6 +25,10 @@ app.use(errorController);
 // Server
 const server = http.createServer(app);
 server.listen(config.PORT, () => {
-    console.log(':: Application started');
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(`:: Application started on port: ${config.PORT} --${process.env.NODE_ENV}`);
+    }
     initDB();
 });
+
+module.exports = server;

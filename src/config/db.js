@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const config = require('../config');
+const logger = require('../helpers/logger');
 
 const options = {
     useNewUrlParser: true,
@@ -17,11 +18,11 @@ if (process.env.NODE_ENV === 'production') options.autoIndex = false;
 module.exports = async function () {
     mongoose
         .connect(config.DB_URI, options)
-        .then(() => console.log(':: Database Connected Successfully'))
+        .then(() => logger.info(':: Database Connected Successfully'))
         .catch((error) => {
-            console.error(`:: Error: ${error.message}`);
-            process.exit();
+            logger.error(`:: Error: ${error.message}`);
+            // process.exit();
         });
 
-    mongoose.connection.on('disconnected', () => console.log(':: Database disconnected from MongoDB'));
+    mongoose.connection.on('disconnected', () => logger.warn(':: Database disconnected from MongoDB'));
 };

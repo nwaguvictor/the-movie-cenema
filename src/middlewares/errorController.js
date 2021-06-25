@@ -1,6 +1,7 @@
 'use strict';
 
 const AppError = require('../helpers/AppError');
+const logger = require('../helpers/logger');
 
 const mongooseDuplicateError = (error) => {
     const [key, value] = Object.entries(error.keyValue)[0];
@@ -39,7 +40,7 @@ module.exports = (error, req, res, next) => {
         err.status = err.status || 'error';
         err.message = err.message || 'Internal Server error, please try again later';
 
-        console.error(`::Error Message: ${error}`);
+        logger.error(`::Error Message: ${error}`, error);
     }
 
     return res.status(err.code).json({

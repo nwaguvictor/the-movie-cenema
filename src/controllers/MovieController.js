@@ -1,7 +1,6 @@
 'use strict';
 
 const { catchAsync } = require('../helpers');
-const AppError = require('../helpers/AppError');
 const { MovieService } = require('../services');
 
 /**

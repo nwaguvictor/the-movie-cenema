@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const config = require('./config');
+const logger = require('./helpers/logger');
 const initDB = require('./config/db');
 const AppError = require('./helpers/AppError');
 const middlewares = require('./middlewares');
@@ -25,10 +26,10 @@ app.use(errorController);
 // Server
 const server = http.createServer(app);
 server.listen(config.PORT, () => {
-    if (process.env.NODE_ENV !== 'production') {
-        console.log(`:: Application started on port: ${config.PORT} --${process.env.NODE_ENV}`);
-    }
     initDB();
+    if (process.env.NODE_ENV !== 'production') {
+        logger.info(`:: Application started on Port: ${config.PORT} Env: ${process.env.NODE_ENV}`);
+    }
 });
 
 module.exports = server;

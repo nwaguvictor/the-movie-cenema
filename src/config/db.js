@@ -20,8 +20,7 @@ module.exports = async function () {
         .connect(config.DB_URI, options)
         .then(() => logger.info(':: Database Connected Successfully'))
         .catch((error) => {
-            logger.error(`:: Error: ${error.message}`);
-            // process.exit();
+            logger.error(`💥:: ${error}`);
         });
 
     mongoose.connection.on('disconnected', () => logger.warn(':: Database disconnected from MongoDB'));

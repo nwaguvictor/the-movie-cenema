@@ -7,6 +7,14 @@ const AppError = require('./helpers/AppError');
 const middlewares = require('./middlewares');
 const errorController = require('./middlewares/errorController');
 
+// Uncaught Exception
+process.on('uncaughtException', (error) => {
+    logger.error(`💥:: Error`, error);
+    logger.on('end', () => {
+        process.exit(1);
+    });
+});
+
 const app = express();
 
 // Middlewares
@@ -23,13 +31,22 @@ app.all('*', (req, res, next) => {
 // Application Error Handler
 app.use(errorController);
 
-// Server
+// Start Server
 const server = http.createServer(app);
 server.listen(config.PORT, () => {
     initDB();
     if (process.env.NODE_ENV !== 'production') {
         logger.info(`:: Application started on Port: ${config.PORT} Env: ${process.env.NODE_ENV}`);
     }
+});
+
+// For any unhandled promise
+process.on('unhandledRejection', (error) => {
+    logger.error(`💥:: Server closed... and process stops`);
+    logger.on('end', () => {
+        server.close();
+        process.exit(1);
+    });
 });
 
 module.exports = server;

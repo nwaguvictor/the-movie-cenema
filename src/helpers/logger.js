@@ -1,20 +1,25 @@
 'use strict';
 
-const winston = require('winston');
+const { createLogger, format, transports } = require('winston');
 const config = require('../config');
 require('winston-mongodb');
 
-const logger = winston.createLogger({
+const logger = createLogger({
     level: 'info',
-    format: winston.format.combine(winston.format.json(), winston.format.colorize()),
+    format: format.combine(format.colorize(), format.json()),
     transports: [
-        new winston.transports.File({ filename: 'errors.log', level: 'error' }),
-        new winston.transports.MongoDB({ db: config.DB_URI, level: 'error' }),
+        new transports.File({ filename: 'errors.log', level: 'error' }),
+        new transports.MongoDB({
+            db: config.DB_URI,
+            options: { useUnifiedTopology: true },
+            collection: 'logs',
+            level: 'error',
+        }),
     ],
 });
 
 if (process.env.NODE_ENV !== 'production') {
-    logger.add(new winston.transports.Console({ format: winston.format.simple() }));
+    logger.add(new transports.Console({ format: format.simple() }));
 }
 
 module.exports = logger;

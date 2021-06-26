@@ -1,6 +1,7 @@
 'use strict';
 
 const { catchAsync } = require('../helpers');
+const AppError = require('../helpers/AppError');
 const { MovieService } = require('../services');
 
 /**
@@ -24,14 +25,7 @@ class MovieController {
         });
     });
     static getMovie = catchAsync(async (req, res, next) => {
-        const movie = await MovieService.getMovie({ id: req.params.id });
-        return res.status(200).json({
-            status: 'success',
-            data: movie,
-        });
-    });
-    static getMovieById = catchAsync(async (req, res, next) => {
-        const movie = await MovieService.getMovieById(req.params.id);
+        const movie = await MovieService.getMovieById(req.movie._id);
         return res.status(200).json({
             status: 'success',
             data: movie,
@@ -39,7 +33,7 @@ class MovieController {
     });
     static updateMovie = catchAsync(async (req, res, next) => {
         const movie = await MovieService.updateMovie({
-            id: req.params.id,
+            movieId: req.movie._id,
             movieData: req.body,
         });
         return res.status(200).json({
@@ -48,11 +42,23 @@ class MovieController {
         });
     });
     static deleteMovie = catchAsync(async (req, res, next) => {
-        await MovieService.deleteMovie(req.params.id);
+        await MovieService.deleteMovie(req.movie._id);
         return res.status(200).json({
             status: 'success',
         });
     });
+
+    static findAndAttach = async (req, res, next, id) => {
+        try {
+            const movie = await MovieService.getMovieById(id);
+            if (!movie) return next(new AppError(`Movie with id: ${id} not found`, 404));
+
+            req.movie = movie;
+            next();
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 // Export Movie Controller Class

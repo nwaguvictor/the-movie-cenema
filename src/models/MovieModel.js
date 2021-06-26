@@ -18,6 +18,7 @@ const MovieSchema = new Schema(
         },
         tagline: {
             type: String,
+            required: [true, 'Movie tagline is requred'],
             minLength: [10, 'Movie tagline should be 10 or more characters'],
             trim: true,
             lowercase: true,

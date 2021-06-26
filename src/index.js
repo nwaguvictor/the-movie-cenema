@@ -42,7 +42,7 @@ server.listen(config.PORT, () => {
 
 // For any unhandled promise
 process.on('unhandledRejection', (error) => {
-    logger.error(`💥:: Server closed... and process stops`);
+    logger.error(`💥:: Server closed... and process stops`, error);
     logger.on('end', () => {
         server.close();
         process.exit(1);

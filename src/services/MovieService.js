@@ -10,10 +10,6 @@ class MovieService {
         const movie = await MovieModel.create(movieData);
         return movie;
     };
-    static getMovie = async (movieData) => {
-        const movies = await MovieModel.find({ movieData });
-        return movies;
-    };
     static getMovies = async (query) => {
         const queryString = Object.assign({}, query);
 
@@ -48,19 +44,19 @@ class MovieService {
         const movies = await queryResult;
         return movies;
     };
-    static getMovieById = async (id) => {
-        const movie = await MovieModel.findById(id);
+    static getMovieById = async (movieId) => {
+        const movie = await MovieModel.findById(movieId);
         return movie;
     };
-    static updateMovie = async ({ id, movieData }) => {
-        const movie = await MovieModel.findByIdAndUpdate(id, movieData, {
+    static updateMovie = async ({ movieId, movieData }) => {
+        const movie = await MovieModel.findByIdAndUpdate(movieId, movieData, {
             runValidators: true,
             new: true,
         });
         return movie;
     };
-    static deleteMovie = async (id) => {
-        const movie = await MovieModel.findByIdAndDelete(id);
+    static deleteMovie = async (movieId) => {
+        const movie = await MovieModel.findByIdAndDelete(movieId);
         return movie;
     };
 }

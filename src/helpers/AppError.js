@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class AppError extends Error {
+class AppError extends Error {
     constructor(message, statusCode) {
         super(message);
         this.statusCode = statusCode || 400;
@@ -8,4 +8,6 @@ module.exports = class AppError extends Error {
 
         Error.captureStackTrace(this, this.contructor);
     }
-};
+}
+
+module.exports = AppError;

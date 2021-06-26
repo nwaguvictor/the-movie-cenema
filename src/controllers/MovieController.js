@@ -38,12 +38,18 @@ class MovieController {
         });
     });
     static updateMovie = catchAsync(async (req, res, next) => {
+        const movie = await MovieService.updateMovie({
+            id: req.params.id,
+            movieData: req.body,
+        });
         return res.status(200).json({
             status: 'success',
+            data: { movie },
         });
     });
     static deleteMovie = catchAsync(async (req, res, next) => {
-        return res.status(204).json({
+        await MovieService.deleteMovie(req.params.id);
+        return res.status(200).json({
             status: 'success',
         });
     });

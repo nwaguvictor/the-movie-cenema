@@ -1,16 +1,11 @@
 'use strict';
 
-class AppError extends Error {
-    constructor(message, code = 400) {
+module.exports = class AppError extends Error {
+    constructor(message, statusCode) {
         super(message);
-        this.message = message;
-        this.status = code >= 400 && code < 500 ? 'fail' : 'error';
-        this.code = code;
-        this.isOperational = true;
+        this.statusCode = statusCode || 400;
+        this.status = statusCode >= 400 && statusCode < 500 ? 'fail' : 'error';
 
         Error.captureStackTrace(this, this.contructor);
     }
-}
-
-// Export Custom Error Class
-module.exports = AppError;
+};

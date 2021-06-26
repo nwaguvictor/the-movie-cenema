@@ -29,22 +29,20 @@ const mongooseCastError = ({ path, value }) => {
 };
 
 module.exports = (error, req, res, next) => {
-    let err = { ...error };
+    if (error.name === 'MongoError') error = mongooseDuplicateError(error);
+    if (error.name === 'ValidationError') error = mongooseValidationError(error);
+    if (error.name === 'CastError') error = mongooseCastError(error);
 
-    if (error.name === 'MongoError') err = mongooseDuplicateError(error);
-    if (error.name === 'ValidationError') err = mongooseValidationError(error);
-    if (error.name === 'CastError') err = mongooseCastError(error);
+    if (!(error instanceof AppError)) {
+        error.statusCode = error.status || 500;
+        error.status = 'error';
+        error.message = error.message || 'Internal Server error, please try again later';
 
-    if (!(err instanceof AppError)) {
-        err.code = err.status || 500;
-        err.status = err.status || 'error';
-        err.message = err.message || 'Internal Server error, please try again later';
-
-        logger.error(`::Error Message: ${error}`, error);
+        logger.error(`:: 💥${error}`);
     }
 
-    return res.status(err.code).json({
-        status: err.status,
-        message: err.message,
+    return res.status(error.statusCode).json({
+        status: error.status,
+        message: error.message,
     });
 };

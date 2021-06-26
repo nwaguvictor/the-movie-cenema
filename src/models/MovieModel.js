@@ -14,11 +14,13 @@ const MovieSchema = new Schema(
             minLength: [3, 'Movie title must be at least 3 charracters'],
             unique: true,
             trim: true,
+            lowercase: true,
         },
         tagline: {
             type: String,
             minLength: [10, 'Movie tagline should be 10 or more characters'],
             trim: true,
+            lowercase: true,
         },
         overview: {
             type: String,

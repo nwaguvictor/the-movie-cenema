@@ -1,6 +1,5 @@
 'use strict';
 
-const AppError = require('../helpers/AppError');
 const MovieModel = require('../models/MovieModel');
 
 /**
@@ -51,6 +50,17 @@ class MovieService {
     };
     static getMovieById = async (id) => {
         const movie = await MovieModel.findById(id);
+        return movie;
+    };
+    static updateMovie = async ({ id, movieData }) => {
+        const movie = await MovieModel.findByIdAndUpdate(id, movieData, {
+            runValidators: true,
+            new: true,
+        });
+        return movie;
+    };
+    static deleteMovie = async (id) => {
+        const movie = await MovieModel.findByIdAndDelete(id);
         return movie;
     };
 }

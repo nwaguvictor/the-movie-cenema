@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const validator = require('validator');
+const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
     name: {
@@ -29,16 +29,6 @@ const UserSchema = new Schema({
         minlength: [5, 'password must be atleast 5 characters'],
         select: false,
     },
-    passwordConfirm: {
-        type: String,
-        required: [true, 'password confirm field is required'],
-        validate: {
-            validator: function (val) {
-                return this.password === val;
-            },
-            message: 'passwords does not match',
-        },
-    },
     role: {
         type: String,
         enum: ['admin', 'customer'],
@@ -50,6 +40,13 @@ const UserSchema = new Schema({
         default: true,
         select: false,
     },
+});
+
+UserSchema.pre('save', async function (next) {
+    if (!this.isModified('password') || !this.isNew) return next();
+
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
 });
 
 module.exports = model('User', UserSchema);

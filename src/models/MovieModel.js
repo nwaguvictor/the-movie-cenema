@@ -1,5 +1,7 @@
 'use strict';
 
+const slugify = require('slugify');
+
 /**
  * Movie Schema
  */
@@ -58,6 +60,11 @@ const MovieSchema = new Schema(
         timestamps: true,
     }
 );
+
+MovieSchema.pre('save', async function (next) {
+    this.slug = slugify(this.title, { lower: true, replacement: '_' });
+    next();
+});
 
 // Export Movie Model
 module.exports = model('Movie', MovieSchema);

@@ -1,9 +1,6 @@
 'use strict';
 
-const router = require('express').Router();
-
-module.exports = (function () {
-    router.use('/movies', require('./movies.router'));
-
-    return router;
-})();
+module.exports = {
+    userRouter: require('./users.router'),
+    movieRouter: require('./movies.router'),
+};

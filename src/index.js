@@ -3,6 +3,7 @@ const http = require('http');
 const config = require('./config');
 const logger = require('./helpers/logger');
 const initDB = require('./config/db');
+const { userRouter, movieRouter } = require('./routes');
 const AppError = require('./helpers/AppError');
 const middlewares = require('./middlewares');
 const errorController = require('./middlewares/errorController');
@@ -21,7 +22,8 @@ const app = express();
 middlewares(app);
 
 // Routes
-app.use('/api/v1', require('./routes'));
+app.use('/', userRouter);
+app.use('/api/v1/movies', movieRouter);
 
 // Routes not defined
 app.all('*', (req, res, next) => {

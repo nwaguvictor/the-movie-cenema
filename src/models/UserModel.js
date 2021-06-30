@@ -38,6 +38,11 @@ const UserSchema = new Schema({
         default: 'customer',
         select: false,
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+        select: false,
+    },
     isActive: {
         type: Boolean,
         default: true,

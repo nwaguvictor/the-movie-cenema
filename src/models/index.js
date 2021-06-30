@@ -1,5 +1,6 @@
 'use strict';
 
 module.exports = {
-    movieModel: require('./MovieModel'),
+    MovieModel: require('./MovieModel'),
+    UserModel: require('./UserModel'),
 };

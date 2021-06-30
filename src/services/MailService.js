@@ -5,7 +5,7 @@ const { MAIL_OPTIONS } = require('../config');
 
 const transport = nodemailer.createTransport(MAIL_OPTIONS);
 
-module.exports = {
+const MailService = {
     // Send welcome email
     async WelcomeEmail(options) {
         return await transport.sendMail({
@@ -19,3 +19,5 @@ module.exports = {
     // Send password reset email
     async PasswordResetEmail() {},
 };
+
+module.exports = MailService;

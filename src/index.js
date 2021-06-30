@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const http = require('http');
 const config = require('./config');
@@ -38,7 +40,9 @@ const server = http.createServer(app);
 server.listen(config.PORT, () => {
     initDB();
     if (process.env.NODE_ENV !== 'production') {
-        logger.info(`:: Application started on Port: ${config.PORT} Env: ${process.env.NODE_ENV}`);
+        logger.info(
+            `:: Application started on Port: ${config.PORT} Env: ${process.env.NODE_ENV}`
+        );
     }
 });
 

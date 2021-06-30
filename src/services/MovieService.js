@@ -1,6 +1,6 @@
 'use strict';
 
-const MovieModel = require('../models/MovieModel');
+const { MovieModel } = require('../models');
 
 /**
  * Movie Service Class

@@ -9,7 +9,7 @@ const MailService = {
     // Send welcome email
     async WelcomeEmail(options) {
         return await transport.sendMail({
-            from: '"Movie Cinema" <hello@moviecinema.com>',
+            from: 'Movie Cinema <hello@moviecinema.com>',
             to: options?.user,
             subject: options?.subject,
             text: options?.text,

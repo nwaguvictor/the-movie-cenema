@@ -8,7 +8,7 @@ const { MONGO_DB_URI, PORT, JWT_KEY, JWT_EXPIRES, MAIL_HOST, MAIL_PORT, MAIL_USE
 const config = {
     production: {
         DB_URI: MONGO_DB_URI,
-        PORT: PORT,
+        PORT: PORT || 5000,
         JWT_KEY: JWT_KEY,
         JWT_EXPIRES: JWT_EXPIRES,
         MAIL_OPTIONS: {
@@ -44,7 +44,7 @@ const config = {
         MAIL_OPTIONS: {
             host: MAIL_HOST,
             port: MAIL_PORT,
-            secure: true,
+            secure: false,
             auth: {
                 user: MAIL_USER,
                 pass: MAIL_PASS,

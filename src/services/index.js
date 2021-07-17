@@ -5,4 +5,5 @@ module.exports = {
     AuthService: require('./AuthService'),
     MovieService: require('./MovieService'),
     UserService: require('./UserService'),
+    MailService: require('./MailService'),
 };

@@ -22,7 +22,7 @@ const config = {
         },
     },
     development: {
-        DB_URI: MONGO_DB_URI || 'mongodb://localhost:27017/movie_cenema_db',
+        DB_URI: 'mongodb://localhost:27017/movie_cenema_db',
         PORT: PORT || 5000,
         JWT_KEY: JWT_KEY,
         JWT_EXPIRES: JWT_EXPIRES,
@@ -37,7 +37,7 @@ const config = {
         },
     },
     test: {
-        DB_URI: MONGO_DB_URI || 'mongodb://localhost:27017/movie_cenema_test_db',
+        DB_URI: 'mongodb://localhost:27017/movie_cenema_test_db',
         PORT: PORT || 2021,
         JWT_KEY: JWT_KEY,
         JWT_EXPIRES: JWT_EXPIRES,

@@ -1,6 +1,8 @@
 'use strict';
 
 const { catchAsync } = require('../helpers');
+const AppError = require('../helpers/AppError');
+const logger = require('../helpers/logger');
 const { AuthService, MailService } = require('../services');
 
 class AuthController {
@@ -10,11 +12,15 @@ class AuthController {
 
         // Send Welcome Email (test)
         setTimeout(async () => {
-            await MailService.WelcomeEmail({
-                user: { email, name },
-                text: `Welcome!. We're delighted to have you.`,
-                html: `<h2>Welcome!</h2> <p>We're delighted to have you.</p>`,
-            });
+            try {
+                await MailService.WelcomeEmail({
+                    user: { email, name },
+                    text: `Welcome!. We're delighted to have you.`,
+                    html: `<h2>Welcome!</h2> <p>We're delighted to have you.</p>`,
+                });
+            } catch (error) {
+                logger.error('Error sending email');
+            }
         }, 5000);
 
         // Send response

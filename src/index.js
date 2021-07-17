@@ -12,10 +12,8 @@ const errorController = require('./middlewares/errorController');
 
 // Uncaught Exception
 process.on('uncaughtException', (error) => {
-    logger.error(`💥:: Error`, error);
-    logger.on('end', () => {
-        process.exit(1);
-    });
+    logger.error(`💥:: ${error.name} - ${error.message}\n`, error);
+    process.exit();
 });
 
 const app = express();
@@ -48,9 +46,8 @@ server.listen(config.PORT, () => {
 
 // For any unhandled promise
 process.on('unhandledRejection', (error) => {
-    logger.error(`💥:: Server closed... and process stops`, error);
-    logger.on('end', () => {
-        server.close();
+    logger.error(`💥:: Shutdown Error: ${error}`);
+    server.close(() => {
         process.exit(1);
     });
 });

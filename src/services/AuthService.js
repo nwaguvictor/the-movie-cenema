@@ -6,7 +6,7 @@ const { UserModel } = require('../models');
 class AuthService {
     static signup = async ({ name, username, email, password, phone }) => {
         let user = await UserModel.findOne({ email });
-        if (user) throw new AppError('email address already registered', 400);
+        if (user) throw new AppError('user with email address already registered', 400);
         user = new UserModel({ name, username, email, password, phone });
 
         // Sign JWT token

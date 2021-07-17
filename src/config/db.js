@@ -13,15 +13,19 @@ const options = {
 };
 
 // Disable autoIndex on production
-if (process.env.NODE_ENV === 'production') options.autoIndex = false;
+if (process.env.NODE_ENV === 'production') {
+    options.autoIndex = false;
+}
 
 module.exports = async function () {
-    mongoose
-        .connect(config.DB_URI, options)
-        .then(() => logger.info(':: Database Connected Successfully'))
-        .catch((error) => {
-            logger.error(`💥:: ${error}`);
-        });
+    try {
+        await mongoose.connect(config.DB_URI, options);
+        logger.info(':: Database Connected Successfully');
+    } catch (e) {
+        logger.error(`💥:: ${e}`);
+    }
 
-    mongoose.connection.on('disconnected', () => logger.warn(':: Database disconnected from MongoDB'));
+    mongoose.connection.on('disconnected', () =>
+        logger.warn(':: Database disconnected from MongoDB')
+    );
 };

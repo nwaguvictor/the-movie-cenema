@@ -23,12 +23,21 @@ const mongooseCastError = ({ path, value }) => {
     return new AppError(message);
 };
 
+const JsonWebTokenError = () => {
+    return new AppError('Invalid token. Please login again', 400);
+};
+const TokenExpiredError = () => {
+    return new AppError('Session expired. Please login again', 400);
+};
+
 module.exports = (error, req, res, next) => {
     let err = { ...error };
 
     if (error.name === 'MongoError') err = mongooseDuplicateError(error);
     if (error.name === 'ValidationError') err = mongooseValidationError(error);
     if (error.name === 'CastError') err = mongooseCastError(error);
+    if (error.name === 'JsonWebTokenError') err = JsonWebTokenError();
+    if (error.name === 'TokenExpiredError') err = TokenExpiredError();
 
     if (!(err instanceof AppError)) {
         err.statusCode = error.statusCode || 500;

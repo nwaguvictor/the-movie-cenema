@@ -1,12 +1,15 @@
 'use strict';
 
+const UserService = require('./UserService');
 const AppError = require('../helpers/AppError');
 const { UserModel } = require('../models');
 
 class AuthService {
     static signup = async ({ name, username, email, password, phone }) => {
-        let user = await UserModel.findOne({ email });
-        if (user) throw new AppError('user with email address already registered', 400);
+        let user = await UserService.getUser({ email });
+        if (user) {
+            throw new AppError('user with email address already registered', 400);
+        }
         user = new UserModel({ name, username, email, password, phone });
 
         // Sign JWT token
@@ -21,7 +24,9 @@ class AuthService {
 
         let user = await UserModel.findOne({ email }).select('+password');
 
-        if (!user) throw new AppError('email address or password is incorrect', 400);
+        if (!user) {
+            throw new AppError('email address or password is incorrect', 400);
+        }
         if (!(await user.confirmPassword(password))) {
             throw new AppError('email address or password is incorrect', 400);
         }
@@ -34,7 +39,9 @@ class AuthService {
     };
     static requestPasswordReset = async ({ email }) => {
         let user = await UserModel.fineOne({ email });
-        if (!user) throw new AppError('Please provide a registered email', 400);
+        if (!user) {
+            throw new AppError('Please provide a registered email', 400);
+        }
 
         // send mail
 

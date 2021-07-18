@@ -1,11 +1,14 @@
 'use strict';
 
-const AppError = require('../helpers/AppError');
 const { UserModel } = require('../models');
 
 class UserService {
-    static getUser = async (filter) => {
-        const user = await UserModel.findOne(filter);
+    static getUser = async (filter, options) => {
+        const user = await UserModel.findOne(filter, options);
+        return user;
+    };
+    static createUser = async ({ name, username, email, password, phone }) => {
+        const user = await UserModel.create({ name, username, email, password, phone });
         return user;
     };
 }

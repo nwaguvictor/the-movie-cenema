@@ -1,6 +1,7 @@
 'use strict';
 
 const { Schema, model } = require('mongoose');
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
@@ -50,10 +51,12 @@ const UserSchema = new Schema({
         default: true,
         select: false,
     },
+    passwordResetToken: String,
+    tokenExpires: Date,
 });
 
 UserSchema.pre('save', async function (next) {
-    if (!this.isModified('password') || !this.isNew) return next();
+    if (!this.isModified('password')) return next();
 
     this.password = await bcrypt.hash(this.password, 10);
     next();
@@ -67,6 +70,14 @@ UserSchema.methods.signToken = function () {
 };
 UserSchema.methods.confirmPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.createPasswordResetToken = function () {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken = crypto.createHash('sha256').update(token).digest('hex');
+    this.tokenExpires = Date.now() + 1000 * 60 * 10;
+
+    return token;
 };
 
 module.exports = model('User', UserSchema);

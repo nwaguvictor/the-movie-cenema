@@ -2,15 +2,18 @@
 
 require('dotenv').config();
 
-const { MONGO_DB_URI, PORT, JWT_KEY, JWT_EXPIRES, MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASS } =
+const { APP_NAME, CLIENT_URI, MONGO_DB_URI, PORT, JWT_KEY, JWT_EXPIRES, MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASS } =
     process.env;
 
 const config = {
     production: {
+        APP_NAME,
+        CLIENT_URI,
+        JWT_KEY,
+        JWT_EXPIRES,
         DB_URI: MONGO_DB_URI,
         PORT: PORT || 5000,
-        JWT_KEY: JWT_KEY,
-        JWT_EXPIRES: JWT_EXPIRES,
+        ROLES: ['admin', 'customer'],
         MAIL_OPTIONS: {
             host: MAIL_HOST,
             port: MAIL_PORT,
@@ -22,10 +25,13 @@ const config = {
         },
     },
     development: {
+        APP_NAME,
+        CLIENT_URI,
+        JWT_KEY,
+        JWT_EXPIRES,
         DB_URI: 'mongodb://localhost:27017/movie_cenema_db',
         PORT: PORT || 5000,
-        JWT_KEY: JWT_KEY,
-        JWT_EXPIRES: JWT_EXPIRES,
+        ROLES: ['admin', 'customer'],
         MAIL_OPTIONS: {
             host: MAIL_HOST,
             port: MAIL_PORT,
@@ -37,10 +43,13 @@ const config = {
         },
     },
     test: {
+        APP_NAME,
+        CLIENT_URI,
+        JWT_KEY,
+        JWT_EXPIRES,
         DB_URI: 'mongodb://localhost:27017/movie_cenema_test_db',
         PORT: PORT || 2021,
-        JWT_KEY: JWT_KEY,
-        JWT_EXPIRES: JWT_EXPIRES,
+        ROLES: ['admin', 'customer'],
         MAIL_OPTIONS: {
             host: MAIL_HOST,
             port: MAIL_PORT,

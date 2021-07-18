@@ -1,29 +1,12 @@
 'use strict';
 
 const { catchAsync } = require('../helpers');
+const { AuthService } = require('../services');
 const AppError = require('../helpers/AppError');
-const logger = require('../helpers/logger');
-const { AuthService, MailService } = require('../services');
 
 class AuthController {
     static signup = catchAsync(async (req, res, next) => {
-        const { email, name } = req.body;
         const token = await AuthService.signup(req.body);
-
-        // Send Welcome Email (test)
-        setTimeout(async () => {
-            try {
-                await MailService.WelcomeEmail({
-                    user: { email, name },
-                    text: `Welcome!. We're delighted to have you.`,
-                    html: `<h2>Welcome!</h2> <p>We're delighted to have you.</p>`,
-                });
-            } catch (error) {
-                logger.error('Error sending email');
-            }
-        }, 5000);
-
-        // Send response
         res.status(200).json({ status: 'success', token });
     });
     static login = catchAsync(async (req, res, next) => {
@@ -31,10 +14,30 @@ class AuthController {
         res.status(200).json({ status: 'success', token });
     });
     static requestPasswordReset = catchAsync(async (req, res, next) => {
-        res.status(200).json({ status: 'success' });
+        const { email } = req.body;
+        if (!email) return next(new AppError('Please provide email address'));
+        await AuthService.requestPasswordReset(email);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'A reset password link was sent to this email address',
+        });
     });
     static passwordReset = catchAsync(async (req, res, next) => {
-        res.status(200).json({ status: 'success' });
+        const { token } = req.params;
+        const { password, passwordConfirm } = req.body;
+
+        // Confirm user inputs
+        if (!token) return next(new AppError('Please use the link sent to your email address'));
+        if (!password) return next(new AppError('Password field is required'));
+        if (!passwordConfirm) return next(new AppError('Password confirm field is required'));
+
+        if (password !== passwordConfirm) {
+            return next(new AppError('Password and confirm password does not match'));
+        }
+
+        const freshToken = await AuthService.passwordReset({ password, token });
+        res.status(200).json({ status: 'success', token: freshToken });
     });
 }
 

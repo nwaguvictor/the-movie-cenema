@@ -2,6 +2,7 @@
 
 const router = require('express').Router();
 const { movieController } = require('../controllers');
+const { auth } = require('../middlewares/AuthMiddleware');
 
 router.param('movieId', movieController.findAndAttach);
 

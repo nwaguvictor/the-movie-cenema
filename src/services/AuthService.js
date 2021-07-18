@@ -1,53 +1,94 @@
 'use strict';
 
+const crypto = require('crypto');
 const UserService = require('./UserService');
+const MailService = require('./MailService');
+const logger = require('../helpers/logger');
 const AppError = require('../helpers/AppError');
-const { UserModel } = require('../models');
 
 class AuthService {
-    static signup = async ({ name, username, email, password, phone }) => {
-        let user = await UserService.getUser({ email });
-        if (user) {
-            throw new AppError('user with email address already registered', 400);
-        }
-        user = new UserModel({ name, username, email, password, phone });
+    static signup = async (userData) => {
+        // Check if user already exist
+        let user = await UserService.getUser({ email: userData.email });
+        if (user) throw new AppError('A user with email address already registered');
+
+        // Create user
+        user = await UserService.createUser(userData);
+
+        // Send Welcome Email to user (test)
+        setTimeout(async () => {
+            try {
+                await MailService.WelcomeEmail({
+                    user: { email: user.email, name: user.name },
+                    text: `Welcome!. We're delighted to have you.`,
+                    html: `<h2>Welcome!</h2> <p>We're delighted to have you.</p>`,
+                });
+            } catch (error) {
+                logger.error('Server Error: Error sending email');
+            }
+        }, 5000);
 
         // Sign JWT token
         const token = await user.signToken();
-        await user.save();
         return token;
     };
     static login = async ({ email, password }) => {
-        if (!email || !password) {
-            throw new AppError('email address and password field is required', 400);
-        }
+        // Confirm user input
+        if (!email || !password) throw new AppError('email address and password field is required');
 
-        let user = await UserModel.findOne({ email }).select('+password');
+        // Check for valid user with email address
+        let user = await UserService.getUser({ email }, { password: 1 });
+        if (!user) throw new AppError('email address or password is incorrect');
 
-        if (!user) {
-            throw new AppError('email address or password is incorrect', 400);
-        }
+        // Confirm user password
         if (!(await user.confirmPassword(password))) {
-            throw new AppError('email address or password is incorrect', 400);
+            throw new AppError('email address or password is incorrect');
         }
 
+        // Sign JWT token
         const token = await user.signToken();
         return token;
     };
-    static verifyMe = async ({ email }) => {
-        return 1;
+    static requestPasswordReset = async (email) => {
+        // Get user with given input
+        let user = await UserService.getUser({ email });
+        if (!user) throw new AppError('Please provide a registered email', 404);
+
+        // Create hash token
+        const token = await user.createPasswordResetToken();
+
+        // try sending password reset email
+        try {
+            await MailService.PasswordResetEmail({ email: user.email, token });
+            await user.save();
+            return true;
+        } catch (error) {
+            user.passwordResetToken = undefined;
+            user.tokenExpires = undefined;
+            await user.save();
+            throw new AppError('Server error: an error has occured, please try later', 500);
+        }
     };
-    static requestPasswordReset = async ({ email }) => {
-        let user = await UserModel.fineOne({ email });
-        if (!user) {
-            throw new AppError('Please provide a registered email', 400);
+    static passwordReset = async ({ password, token }) => {
+        // Get user using token
+        const hashToken = crypto.createHash('sha256').update(token).digest('hex');
+        let user = await UserService.getUser({ passwordResetToken: hashToken }, { password: 1 });
+        if (!user) throw new AppError('Invalid token provided, please request again', 401);
+        if (Date.now() > parseInt(user.tokenExpires, 10)) {
+            throw new AppError('Token expired, please request another token', 401);
         }
 
-        // send mail
+        user.password = password;
+        user.passwordResetToken = undefined;
+        user.tokenExpires = undefined;
 
-        return 1;
+        // Sign new token
+        const freshToken = user.signToken();
+        await user.save();
+
+        return freshToken;
     };
-    static passwordReset = async ({ email }) => {
+    static verifyMe = async ({ email }) => {
         return 1;
     };
     static updateMe = async ({ email }) => {

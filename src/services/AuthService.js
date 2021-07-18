@@ -37,7 +37,7 @@ class AuthService {
         if (!email || !password) throw new AppError('email address and password field is required');
 
         // Check for valid user with email address
-        let user = await UserService.getUser({ email }, { password: 1 });
+        let user = await UserService.getUser({ email });
         if (!user) throw new AppError('email address or password is incorrect');
 
         // Confirm user password
@@ -72,9 +72,9 @@ class AuthService {
     static passwordReset = async ({ password, token }) => {
         // Get user using token
         const hashToken = crypto.createHash('sha256').update(token).digest('hex');
-        let user = await UserService.getUser({ passwordResetToken: hashToken }, { password: 1 });
+        let user = await UserService.getUser({ passwordResetToken: hashToken });
         if (!user) throw new AppError('Invalid token provided, please request again', 401);
-        if (Date.now() > parseInt(user.tokenExpires, 10)) {
+        if (Date.now() > new Date(user.tokenExpires).getTime()) {
             throw new AppError('Token expired, please request another token', 401);
         }
 

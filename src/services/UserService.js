@@ -4,7 +4,7 @@ const { UserModel } = require('../models');
 
 class UserService {
     static getUser = async (filter, options) => {
-        const user = await UserModel.findOne(filter, options);
+        const user = await UserModel.findOne(filter, options).select('+password -__v');
         return user;
     };
     static createUser = async ({ name, username, email, password, phone }) => {

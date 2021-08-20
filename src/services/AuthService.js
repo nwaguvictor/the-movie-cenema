@@ -24,7 +24,7 @@ class AuthService {
                     html: `<h2>Welcome!</h2> <p>We're delighted to have you.</p>`,
                 });
             } catch (error) {
-                logger.error('Server Error: Error sending email');
+                logger.error('Server Error: Error sending email', error);
             }
         }, 5000);
 

@@ -2,7 +2,9 @@
     "name": "themoviecenema",
     "version": "1.0.0",
     "main": "index.js",
+    "homepage": "https://github.com/nwaguvictor/the-movie-cinema#readme",
     "license": "MIT",
+    "private": true,
     "author": {
         "name": "Victor Nwagu",
         "email": "leofizzy3@gmail.com"
@@ -11,6 +13,7 @@
         "start": "nodemon src/index.js",
         "test": "jest --watchAll --verbose --detectOpenHandles"
     },
+    "bugs": "https://github.com/nwaguvictor/the-movie-cinema/issues",
     "dependencies": {
         "bcrypt": "^5.0.1",
         "dotenv": "^10.0.0",

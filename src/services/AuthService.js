@@ -5,6 +5,7 @@ const UserService = require('./UserService');
 const MailService = require('./MailService');
 const logger = require('../helpers/logger');
 const AppError = require('../helpers/AppError');
+const { CLIENT_URI } = require('../config');
 
 class AuthService {
     static signup = async (userData) => {
@@ -17,11 +18,15 @@ class AuthService {
 
         // Send Welcome Email to user (test)
         setTimeout(async () => {
+            const verificationLink = `${CLIENT_URI}/verify/?email=${user.email}`;
             try {
                 await MailService.WelcomeEmail({
                     user: { email: user.email, name: user.name },
                     text: `Welcome!. We're delighted to have you.`,
-                    html: `<h2>Welcome!</h2> <p>We're delighted to have you.</p>`,
+                    html: `<h2>Welcome!</h2> 
+                        <p>We're delighted to have you.</p>
+                        <p>Please use the link below to verify your account</p>
+                        <a href="${verificationLink}">Verify me</a>`,
                 });
             } catch (error) {
                 logger.error('Server Error: Error sending email', error);
@@ -89,7 +94,10 @@ class AuthService {
         return freshToken;
     };
     static verifyMe = async ({ email }) => {
-        return 1;
+        let user = await UserService.getUser({ email });
+        if (!user) throw new AppError('Unauthorized access: email address not registered');
+        user = await UserService.updateUser({ email, userData: { isVerified: true } });
+        return true;
     };
     static updateMe = async ({ email }) => {
         return 1;

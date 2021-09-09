@@ -18,8 +18,8 @@ exports.auth = catchAsync(async (req, res, next) => {
 
     // Verify User with token
     if (!user) return next(new AppError('Unauthorized access: user with token does not exist', 401));
-    if (!user.isActivated) return next(new AppError('Unauthorized access: account has been deactivated', 401));
     if (!user.isVerified) return next(new AppError('Unauthorized access: please verify email address', 401));
+    if (!user.isActive) return next(new AppError('Unauthorized access: account has been deactivated', 401));
     if (!ROLES.includes(user.role)) return next(AppError('Unauthorized access: access denied', 401));
     // Grant access
     req._user = user;

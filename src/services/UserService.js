@@ -11,6 +11,13 @@ class UserService {
         const user = await UserModel.create({ name, username, email, password, phone });
         return user;
     };
+    static updateUser = async ({ email, userData }) => {
+        const user = await UserModel.findOneAndUpdate({ email }, userData, {
+            runValidation: true,
+            new: true,
+        });
+        return user;
+    };
 }
 
 module.exports = UserService;
